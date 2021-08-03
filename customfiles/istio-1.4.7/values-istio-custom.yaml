@@ -1,0 +1,236 @@
+# Common settings.
+global:
+  istioNamespace: istio-system
+
+
+gateways:
+  enabled: true
+
+  istio-ingressgateway:
+    enabled: true
+    labels:
+      app: istio-ingressgateway1
+      istio: istio-ingressgateway1
+    autoscaleEnabled: true
+    autoscaleMin: 1
+    autoscaleMax: 5
+    # specify replicaCount when autoscaleEnabled: false
+    # replicaCount: 1
+    rollingMaxSurge: 100%
+    rollingMaxUnavailable: 25%
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 1024Mi
+    cpu:
+      targetAverageUtilization: 80
+    loadBalancerIP: ""
+    # loadBalancerSourceRanges: {}
+    # externalIPs: []
+    # serviceAnnotations: {}
+    # podAnnotations: {}
+    type: LoadBalancer #change to NodePort, ClusterIP or LoadBalancer if need be
+    #externalTrafficPolicy: Local #change to Local to preserve source IP or Cluster for default behaviour or leave commented out
+    ports:
+      ## You can add custom gateway ports
+    - port: 80
+      targetPort: 80
+      name: http2
+      # nodePort: 31380
+    - port: 443
+      name: https
+      # nodePort: 31390
+    - port: 31400
+      name: tcp
+      # nodePort: 31400
+    # Pilot and Citadel MTLS ports are enabled in gateway - but will only redirect
+    # to pilot/citadel if global.meshExpansion settings are enabled.
+    - port: 15011
+      targetPort: 15011
+      name: tcp-pilot-grpc-tls
+    - port: 8060
+      targetPort: 8060
+      name: tcp-citadel-grpc-tls
+    # Addon ports for kiali are enabled in gateway - but will only redirect if
+    # the gateway configuration for the various components are enabled.
+    - port: 15029
+      targetPort: 15029
+      name: http2-kiali
+    # Telemetry-related ports are enabled in gateway - but will only redirect if
+    # the gateway configuration for the various components are enabled.
+    - port: 15030
+      targetPort: 15030
+      name: http2-prometheus
+    - port: 15031
+      targetPort: 15031
+      name: http2-grafana
+    - port: 15032
+      targetPort: 15032
+      name: http2-tracing
+
+  # istio-ingressgateway2:
+  #   enabled: true
+  #   labels:
+  #     app: istio-ingressgateway2
+  #     istio: istio-ingressgateway2
+  #   autoscaleEnabled: true
+  #   autoscaleMin: 1
+  #   autoscaleMax: 5
+  #   # specify replicaCount when autoscaleEnabled: false
+  #   # replicaCount: 1
+  #   rollingMaxSurge: 100%
+  #   rollingMaxUnavailable: 25%
+  #   resources:
+  #     requests:
+  #       cpu: 100m
+  #       memory: 128Mi
+  #     limits:
+  #       cpu: 2000m
+  #       memory: 1024Mi
+  #   cpu:
+  #     targetAverageUtilization: 80
+  #   loadBalancerIP: ""
+  #   externalIPs: []
+  #   serviceAnnotations: {}
+  #   podAnnotations: {}
+  #   type: LoadBalancer #change to NodePort, ClusterIP or LoadBalancer if need be
+  #   #externalTrafficPolicy: Local #change to Local to preserve source IP or Cluster for default behaviour or leave commented out
+  #   ports:
+  #     ## You can add custom gateway ports
+  #   - port: 80
+  #     targetPort: 80
+  #     name: http2
+  #     # nodePort: 31380
+  #   - port: 443
+  #     name: https
+  #     # nodePort: 31390
+  #   - port: 31400
+  #     name: https-argocd
+  #     # nodePort: 31400
+  #   # Pilot and Citadel MTLS ports are enabled in gateway - but will only redirect
+  #   # to pilot/citadel if global.meshExpansion settings are enabled.
+  #   - port: 15011
+  #     targetPort: 15011
+  #     name: tcp-pilot-grpc-tls
+  #   - port: 8060
+  #     targetPort: 8060
+  #     name: tcp-citadel-grpc-tls
+  #   # Addon ports for kiali are enabled in gateway - but will only redirect if
+  #   # the gateway configuration for the various components are enabled.
+  #   - port: 15029
+  #     targetPort: 15029
+  #     name: http2-kiali
+  #   # Telemetry-related ports are enabled in gateway - but will only redirect if
+  #   # the gateway configuration for the various components are enabled.
+  #   - port: 15030
+  #     targetPort: 15030
+  #     name: http2-prometheus
+  #   - port: 15031
+  #     targetPort: 15031
+  #     name: http2-grafana
+  #   - port: 15032
+  #     targetPort: 15032
+  #     name: http2-tracing
+
+  # istio-ingressgateway3:
+  #   enabled: true
+  #   labels:
+  #     app: istio-ingressgateway3
+  #     istio: istio-ingressgateway3
+  #   autoscaleEnabled: true
+  #   autoscaleMin: 1
+  #   autoscaleMax: 5
+  #   # specify replicaCount when autoscaleEnabled: false
+  #   # replicaCount: 1
+  #   rollingMaxSurge: 100%
+  #   rollingMaxUnavailable: 25%
+  #   resources:
+  #     requests:
+  #       cpu: 100m
+  #       memory: 128Mi
+  #     limits:
+  #       cpu: 2000m
+  #       memory: 1024Mi
+  #   cpu:
+  #     targetAverageUtilization: 80
+  #   loadBalancerIP: ""
+  #   loadBalancerSourceRanges: {}
+  #   externalIPs: []
+  #   serviceAnnotations: {}
+  #   podAnnotations: {}
+  #   type: LoadBalancer #change to NodePort, ClusterIP or LoadBalancer if need be
+  #   #externalTrafficPolicy: Local #change to Local to preserve source IP or Cluster for default behaviour or leave commented out
+  #   ports:
+  #     ## You can add custom gateway ports
+  #   - port: 80
+  #     targetPort: 80
+  #     name: http2
+  #     # nodePort: 31380
+  #   - port: 443
+  #     name: https
+  #     # nodePort: 31390
+  #   - port: 31400
+  #     name: tcp
+  #     # nodePort: 31400
+  #   # Pilot and Citadel MTLS ports are enabled in gateway - but will only redirect
+  #   # to pilot/citadel if global.meshExpansion settings are enabled.
+  #   - port: 15011
+  #     targetPort: 15011
+  #     name: tcp-pilot-grpc-tls
+  #   - port: 8060
+  #     targetPort: 8060
+  #     name: tcp-citadel-grpc-tls
+  #   # Addon ports for kiali are enabled in gateway - but will only redirect if
+  #   # the gateway configuration for the various components are enabled.
+  #   - port: 15029
+  #     targetPort: 15029
+  #     name: http2-kiali
+  #   # Telemetry-related ports are enabled in gateway - but will only redirect if
+  #   # the gateway configuration for the various components are enabled.
+  #   - port: 15030
+  #     targetPort: 15030
+  #     name: http2-prometheus
+  #   - port: 15031
+  #     targetPort: 15031
+  #     name: http2-grafana
+  #   - port: 15032
+  #     targetPort: 15032
+  #     name: http2-tracing
+
+security:
+  enabled: true
+
+sidecarInjectorWebhook:
+  enabled: true
+
+galley:
+  enabled: true
+
+mixer:
+  policy:
+    enabled: true
+  telemetry:
+    enabled: true
+
+pilot:
+  enabled: true
+
+grafana:
+  enabled: true
+  persist: false
+
+prometheus:
+  enabled: true
+  retention: 30d
+
+tracing:
+  enabled: false
+
+kiali:
+  enabled: false
+
+certmanager:
+  enabled: false
